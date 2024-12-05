@@ -41,6 +41,7 @@ public class ScheduleController {
             schedule.setScheduleName(requestDto.getScheduleName());
             schedule.setStartTime(startTime);
             schedule.setEndTime(endTime);
+            schedule.setDates(requestDto.getDates());
             schedule.setUserId(user.get().getId());
             return scheduleRepository.save(schedule);
         } else {
@@ -70,6 +71,7 @@ public class ScheduleController {
             schedule.setScheduleName(requestDto.getScheduleName());
             schedule.setStartTime(startTime);
             schedule.setEndTime(endTime);
+            schedule.setDates(requestDto.getDates());
             return scheduleRepository.save(schedule);
         } else {
             throw new RuntimeException("유저를 찾을 수 없습니다.");
