@@ -1,4 +1,4 @@
-package com.mini.domain.user;
+package com.mini.domain.user.repository;
 
 
 import com.mini.domain.user.entity.RefreshEntity;
