@@ -1,7 +1,7 @@
 package com.mini.domain.user.oauth2;
 
 
-import com.mini.domain.user.RefreshRepository;
+import com.mini.domain.user.repository.RefreshRepository;
 import com.mini.domain.user.dto.CustomOAuth2User;
 import com.mini.domain.user.entity.RefreshEntity;
 import com.mini.global.jwt.JWTUtil;
