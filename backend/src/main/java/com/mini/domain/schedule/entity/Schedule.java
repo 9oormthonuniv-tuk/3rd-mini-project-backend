@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import com.mini.util.TimeMaskUtil;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,6 +25,11 @@ public class Schedule {
 
     @Transient // 데이터베이스와 관계없는 필드
     private String timeMask; // 비트마스크
+
+    @ElementCollection
+    @CollectionTable(name = "schedule_dates", joinColumns = @JoinColumn(name = "schedule_id"))
+    @Column(name = "date")
+    private List<LocalDate> dates; // 일정 날짜 목록
 
     public String getTimeMask() {
         if (startTime != null && endTime != null) {
