@@ -24,7 +24,6 @@ public class MainController {
     @GetMapping("/a")
     public String a(@AuthenticationPrincipal CustomOAuth2User userDetails) {
         Optional<UserEntity> User = userEntityRepository.findByUsername(userDetails.getUsername());
-        log.info("username = {}", User.get().toString());
         return "main.a";
     }
 }
