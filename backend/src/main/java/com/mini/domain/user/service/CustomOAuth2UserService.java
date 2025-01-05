@@ -1,6 +1,6 @@
 package com.mini.domain.user.service;
 
-import com.mini.domain.user.UserRepository;
+import com.mini.domain.user.repository.UserEntityRepository;
 import com.mini.domain.user.dto.*;
 import com.mini.domain.user.entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -10,21 +10,22 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final UserRepository userRepository;
+    private final UserEntityRepository userEntityRepository;
 
-    public CustomOAuth2UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomOAuth2UserService(UserEntityRepository userEntityRepository) {
+        this.userEntityRepository = userEntityRepository;
     }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        log.info("oAuth2User = {}", oAuth2User.getAttributes());
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
@@ -39,20 +40,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
 
-        UserEntity existData = userRepository.findByUsername(username);
+        Optional<UserEntity> existData = userEntityRepository.findByUsername(username);
 
-        if (existData == null) {
+        if (existData.isEmpty()) {
             UserEntity userEntity = new UserEntity(username, oAuth2Response.getName(), oAuth2Response.getEmail(), "ROLE_USER");
-            userRepository.save(userEntity);
+            userEntityRepository.save(userEntity);
 
             UserDTO userDTO = new UserDTO(username, oAuth2Response.getName(), "ROLE_USER");
             return new CustomOAuth2User(userDTO);
         }else{
-            existData.setEmail(oAuth2Response.getEmail());
-            existData.setName(oAuth2Response.getName());
-            userRepository.save(existData);
+            UserEntity user = existData.get();
+            user.setEmail(oAuth2Response.getEmail());
+            user.setName(oAuth2Response.getName());
+            userEntityRepository.save(user);
 
-            UserDTO userDTO = new UserDTO(existData.getUsername(), oAuth2Response.getName(), existData.getRole());
+            UserDTO userDTO = new UserDTO(user.getUsername(), oAuth2Response.getName(), user.getRole());
             return new CustomOAuth2User(userDTO);
         }
 

@@ -23,15 +23,23 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        // 필터를 적용하지 않을 경로 지정
+        return path.startsWith("/login") || path.startsWith("/oauth2/") || path.startsWith("/static/") || path.equals("/favicon.ico");
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("Request URI: {}", request.getRequestURI());
         //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
         String accessToken = null;
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                log.info("cookie.getName = {}", cookie.getName());
                 if (cookie.getName().equals("access")) {
                     accessToken = cookie.getValue();
                 }

@@ -1,7 +1,7 @@
 package com.mini.domain.user.oauth2;
 
 
-import com.mini.domain.user.RefreshRepository;
+import com.mini.domain.user.repository.RefreshRepository;
 import com.mini.domain.user.dto.CustomOAuth2User;
 import com.mini.domain.user.entity.RefreshEntity;
 import com.mini.global.jwt.JWTUtil;
@@ -39,7 +39,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
         String username = customUserDetails.getUsername();
-        log.info("username = {}", username);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -54,7 +53,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(createCookie("access", access));
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect("http://localhost:8080/main/a");
+        response.sendRedirect("http://localhost:5173");
     }
 
 

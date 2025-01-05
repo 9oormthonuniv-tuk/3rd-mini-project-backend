@@ -45,4 +45,5 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+    com.mini.global.aop.LoggingAspect: DEBUG
 
